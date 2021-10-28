@@ -23,9 +23,9 @@ var GLOBAL={
 window.addEventListener("load",function()
 {
 	GLOBAL.FC_chart = echarts.init(
-        document.getElementById('container-den'), 'white', {renderer: 'canvas1'});
+        document.getElementById('container-fun'), 'white', {renderer: 'canvas1'});
 	GLOBAL.SC_chart = echarts.init(
-        document.getElementById('container-fun'), 'white', {renderer: 'canvas2'});
+        document.getElementById('container-den'), 'white', {renderer: 'canvas2'});
 	loadLabelMaps();
 	// loadBarCharts();
 	loadTreeViewData();
