@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!–[if lt IE9]> 
+		<script type="text/javascript" src="js/html5.js"></script>
+		<![endif]–>
+		<!-- InstanceBeginEditable name="doctitle" -->
+		<title>Brainnetome Atlas | Download</title>
+		<link rel = "Shortcut Icon" href="images/ba/favicon.ico">
+		<!-- InstanceEndEditable -->
+		<!-- InstanceBeginEditable name="head" -->
+		<meta http-equiv="Description" content="Brainnetome Atlas" />
+		<meta http-equiv="Keywords" content="Brainnetome Atlas, Brainnetome, atlas, brain mapping, brain connectivity, neuroimaging, functional MRI,  parcellation, connectivity based parcellation brain atlas" />
+		<!-- InstanceEndEditable -->
+		<link href="css/hcpv.css" rel="stylesheet" type="text/css" />
+
+		<script type="text/javascript">
+			function validateEmail(email) {
+			  var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				return re.test(email);
+		  }
+			function isEmail(str)
+			{
+				var reg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+				return reg.test(str);
+			}
+			function validate()
+			{
+				var thename=document.getElementById("register_1").value;
+				var thecou=document.getElementById("register_2").value;
+				var theins=document.getElementById("register_3").value;
+				var theemail=document.getElementById("register_4").value;
+				if(thename.length<=0)
+					alert("Name can not be null!");
+				else if(thecou.length<=0)
+					alert("Country can not be null!");
+				else if(theins.length<=0)
+					alert("Institution can not be null!");
+				else if(theemail.length<=0)
+					alert("Email can not be null!");
+				else if(validateEmail(theemail)==0)
+					alert("Email is not right");
+				else	
+				{	
+					document.forms['form_register'].submit();
+				}
+			}
+		</script>
+		
+	
+	</head>
+	
+
+<body>
+	
+<!-- site container -->
+<div id="site_container">
+
+	<!-- Header -->
+	<div id="header">
+		<div id="header_nav">
+			<a href="http://www.ia.cas.cn/" target="_blank"><span>CASIA</span></a><span> | </span>
+			<a href="http://www.brainnetome.org/" target="_blank"><span>Brainnetome Center</span></a><span> | </span>
+			<a href="contacts.html" target="_blank"><span>Contact Us</span></a>
+		</div>
+		<div id="header_logo"></div>
+	</div> <!-- end Header -->
+
+	<!-- top level navigation -->
+	<div id="topnav">
+		<ul id="navigation" class="navigation">
+			<li id="menu-item-4061" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4061"><a href="index.html"><span>Home</span></a></li>
+			<li id="menu-item-4097" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4097"><a href="bnatlas.html"><span>Human Atlas</span></a></li>
+			<li id="menu-item-4098" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4098"><a href="mcqatlas.html"><span>Macaque Atlas</span></a></li>
+			<li id="menu-item-4058" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item menu-item-4058"><a href="download.html"><span>Download</span></a></li>
+			<li id="menu-item-4124" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4124"><a href="publications.html"><span>Publications</span></a></li>
+			<li id="menu-item-4130" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4130"><a href="faqs.html"><span>FAQs</span></a></li>
+			<li id="menu-item-4131" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4131"><a href="contacts.html"><span>Contacts</span></a></li>
+			<li id="menu-item-4909" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4909"><a href="brainnetome.html"><span>Brainnetome</span></a></li>
+			<!-- <li id="wiki" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4055"><a href="wiki/home"><span>Discussion</span></a></li> -->
+		</ul>
+		<div class="cl"></div>
+	</div>
+	<div id="search"></div> <!-- Search box -->
+	<!-- End Nav -->
+         
+	<!-- "Middle" area contains all content between the top navigation and the footer -->
+	<div id="middle">
+		  <!-- the left Main Content" -->
+		  <div id="content" class="editable"> 
+			    <div id="cse" style="width:100%; display:none;"></div>
+			    <h2><strong>Macaque Brainnetome Atlas</strong></h2>
+			    <p><a>Macaque Brainnetome Atlas (MBA)</a> is a new macaque monkey atlas characterized by the anatomical connectivity of 304 subregions accompanied with the structural and the resting functional connectome. Compared with the existing monkey brain atlas, our atlas has several advantages: 1) the population atlas uses high spatial and angular resolution DWI images of 8 ex-vivo monkey samples to present the reproducible connectivity contrast; 2) it conveys both detailed structural and resting functional connection pattern of each subregion; 3) A comprehensive validation was conducted across different dataset including ex-vivo, in-vivo MRI images and tracer study; 4) white surface (white/gray matter interface) based tracking was used for cortical parcellation to avoid streamlines originating from gray matter where the orientation estimation uncertainty increases; 5) we provide both surface and volume versions of the atlas for convenient and extensive usage. </p>
+			    <h2><strong>ATPP: Automatic Tractography-based Parcellation Pipeline</strong></h2>
+			    <p>ATPP is an integrated pipeline named ATPP realizing tractography-based brain parcellation with automatic processing and massive parallel computing. ATPP offers a powerful CLI version <a href="https://github.com/haililihai/ATPP_CLI">ATPP_CLI</a> for parcellating multiple brain regions and a user-friendly GUI version <a href="https://github.com/haililihai/ATPP_GUI">ATPP_GUI</a> for parcellating a specific brain region. </p>
+			    <h2><strong>MonkeyCBP: A toolbox for connectivity-based parcellation of monkey brain</strong></h2>
+			    <p>MonkeyCBP <a href="https://github.com/bheAI/MonkeyCBP_CLI">MonkeyCBP_CLI</a> is an integrated pipeline namedMonkeyCBP realizing tractography-based brain parcellation with automatic processing and massive parallel computing. The highly-automated process and high-throughput performance supported by GPU option makes the toolbox ready to be used by a wider research community. </p>
+			    <h2><strong>Brainnetome Atlas Viewer (V1.0)</strong></h2>
+			    <p>Brainnetome Atlas Viewer(V1.0) shows the anatomical connectivity-based parcellation results, including the MPM maps,probabilistic maps and both the anatomical and functional connectivity patterns, which have been developed in the teams of in Brainnetome Center, CASIA. They are based on the analysis of connectional architecture with in vivo multi-modal MRI data during the last 3 years. The Brainnetome Center at CASIA is home of the Brainnetome Atlas Viewer(V.10). If you would like to download the atlas,please make sure you first read the legal agreement.</p>
+			    <p>Brainnetome Atlas Viewer was developed using MATLAB with a user-friendly GUI. The toolkit included functions of NIfTI package for loading NIfTI and Analyze format files. This toolkit had been successfully tested under a variety of operating systems with MATLAB installed, including Windows, Linux (Ubuntu and CentOS). Brainnetome atlas Viewer was designed as the following procedure (see the Figure for a flowchart). First, users started the software in the command line of MATLAB. Then, an easy-to-use interface would show up, including the basic options for visualization of the atlas (such as the choice of background template). Users could view the whole atlas (maximum probabilistic map, MPM) and select a specific region for details. Subsequently, the toolkit would draw the selected region. If there were published papers about the selected region, users could visit the corresponding papers in Pubmed via the default browser. For the connectivity pattern for the region, users could check the activated checkboxes for functional/structural connectivity in two/three dimension. In addition, the brain region and connectivity pattern could be yoked together selected the corresponding checkbox. Finally, users could shut down any window by canceling the corresponding checkbox. For a specific brain region, Brainnetome atlas also provides the probabilistic map (PM) describing the frequency with which each voxel of the specific area was observed in the samples. The toolkit included the function for demonstrating the PM (using the specific probability as threshold to mask and save the PM; showing the corresponding label, from other atlas, of each voxel in PM).</p>
+			    <p><img src="images/cover/software1.png" alt="" name="screenshot" width="526" height="461" id="screenshot2" /></p>
+			    <p><img src="images/cover/software2.png" alt="" name="screenshot" width="526" height="421" id="screenshot2" /></p>
+			</div><!-- End the left Main Content" --> 
+	
+	 
+			<!-- the right sidebar of middle Content" -->
+			<div id="sidebar-rt">
+		      <!-- InstanceBeginEditable name="Sidebar Content" -->
+		<div id="sidebar-content3" class="editable">
+	        	<a name="c"></a>
+					<div class="sidebox">
+				        <h2 style="border-bottom:1px solid #cb6; padding-bottom:10px;margin-bottom:10px;">Please download README first</h2>
+					<li> <a href="http://www.brainnetome.org/resource/">If no download, please click here!</a> </li>
+	       				<a href="https://pan.cstcloud.cn/web/share.html?hash=frlJFHqhSH0">BrainnetomeAtlasViewer20200612.zip</a>
+					<a href="https://pan.cstcloud.cn/web/share.html?hash=xk742dg0REU">BNAviewer_ReleaseNote20200612.txt</a>
+					<a href="https://pan.cstcloud.cn/web/share.html?hash=0NrZTk3XSDY">README</a><br/>
+					<a href="https://pan.cstcloud.cn/s/DQov5gaAR4s">BN_Atlas_freesurfer.zip</a><br/>
+					<a href="https://pan.cstcloud.cn/s/gfGflpp3Q0E">BN_Atlas_246_1mm.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/2wL0QvSQQ">BN_Atlas_246_2mm.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/pFv7il55TXU">BN_Atlas_246_3mm.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/zcSkqBQI0">BN_Atlas_274_combined.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/lsqHZSsS3g">BN_Atlas_for_FSL.zip</a><br/>
+					<a href="https://pan.cstcloud.cn/s/oL6lZdBS50">lh.BN_Atlas.gcs</a><br/>
+					<a href="https://pan.cstcloud.cn/s/om8vqJxjRN4">rh.BN_Atlas.gcs</a><br/>
+					<a href="https://pan.cstcloud.cn/s/XvMTFx2xSv8">BN_Atlas_subcortex.gca</a><br/>
+					<a href="https://pan.cstcloud.cn/s/Edvop4rRtU">BN_Atlas_246_LUT.txt</a><br/>
+					<a href="https://pan.cstcloud.cn/s/6htNXSZZQZE">BNA_FC_3D_246.zip</a><br/>
+					<a href="https://pan.cstcloud.cn/s/GP3urQok">BNA_FC_4D.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/JX89RKcgTHM">BNA_matrix_binary_246x246.csv</a><br/>
+					<a href="https://pan.cstcloud.cn/s/H9wCmuJSFI">BNA_MPM_thr25_1.25mm.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/8w8wLsbSAY">BNA_PM_3D_246.zip</a><br/>
+ 					<a href="https://pan.cstcloud.cn/s/jbLxOO7cRbo">BNA_PM_4D.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/xNoiwq7dQIo">BNA_SC_3D_246.zip</a><br/>
+					<a href="https://pan.cstcloud.cn/s/KwqIPh1SoU">BNA_SC_4D.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/6eRCJ0zDTFk">BNA_subregions.xlsx</a><br/>
+					<a href="https://pan.cstcloud.cn/s/8XU1GRyrSj4">Human_Nucleus_Accumbens.zip</a><br/>
+					<a href="https://pan.cstcloud.cn/s/drH9oZfWSOM">subregion_func_network_Yeo.csv</a><br/>
+					<a href="https://pan.cstcloud.cn/s/cRrY3Ys6S4g">HCP40_MNI_1.25mm.nii.gz</a><br/>
+					<a href="https://pan.cstcloud.cn/s/7kEp0Pe6TE4">Macaque_cortex_atlas_WangJJ-2017-BT.zip</a><br/>
+					<a href="https://pan.cstcloud.cn/s/g4R8zkDSRRI">IPL_across_species_parcellation.zip</a><br/>
+					<li> <a href="http://www.brainnetome.org/resource/">If no download, please click here!</a> </li>
+			<p>&nbsp;</p>
+			</div>
+	    </div>
+	        <!--<div id="sidebar-content" class="editable">
+		        <!--<div class="sidebox-bottom"></div>-->
+		        <!--<a name="b"></a>
+					<div class="sidebox">
+						<h2>Get Brainnetome Atlas Viewer</h2>
+						<div><form name="form_register" id="form_register" action="http://liangfu.org/servlet/bnatlas_download" method="GET">
+								<a href="http://ddl.escience.cn/f/zjzR?func=download&rid=5994389">BrainnetomeAtlasViewer.zip</a>-->
+								<!--
+								<table style="width:220px;">
+									<tr>
+										<td style="width:55px;"><strong>Name*</strong></td>
+										<td><input type="text" id="register_1" name="name" value="" style="width:160px; margin:2px 0 0 5px;"></td>
+										</tr>
+									<tr>
+										<td style="width:55px;"><strong>Country*</strong></td>
+										<td><input type="text" id="register_2" name="cou" value="" style="width:160px; margin:2px 0 0 5px;"></td>
+										</tr>
+									<tr>
+										<td style="width:55px;"><strong>Institution*</strong></td>
+										<td><input id="register_3" style="width:160px; margin:2px 0 0 5px;" type="text" name="ins" value="" ></td>
+										</tr>
+									<tr>
+										<td style="width:55px;"><strong>Email*</strong></td>
+										<td><input id="register_4" style="width:160px; margin:2px 0 0 5px;" type="text" name="email" value="" ></td>
+										</tr>
+									<tr>
+										<td style="text-align:right;"><input type="reset" value="Reset"></td>
+										<td style="text-align:center;"><input type="button" name="b_sendmail" value="Register" id="b_sendmail" onClick="validate()"></td>
+										</tr>
+								</table>-->
+						</form></div>
+					</div>-->
+			<a name="a"></a>
+						<div class="sidebox">
+				        <h2 style="border-bottom:1px solid #cb6; padding-bottom:10px;margin-bottom:10px;">Please read the following legal agreement:</h2>
+				        <p>The information, images and data on this website are the property of the Brainetome Center. Our center is willing to make this information available to researchers, scientists and others at colleges, universities, not-for-profit foundations and other similar institutions free of charge, subject to proper attribution and an agreement to share alike, for use for non-commercial purposes. Brainetome Center will consider granting a license to individuals and entities that wish to use the information, images and data for commercial purposes. Such requests should be made to Dr. Lingzhong Fan by e-mail:<a href="#">brainnetome.atlas@nlpr.ia.ac.cn</a></p><br />
+		        </div>
+					<!--<div class="sidebox-bottom"> </div>-->
+	        </div> 
+		 <!-- end the right sidebar of middle Content" -->
+				<br/>
+	    <h2>&nbsp;<strong>Join our mailing list</strong>&nbsp; </h2>
+		<form action="http://www.freelists.org/cgi-bin/subscription.cgi" method="post"><strong>
+	        <input type="hidden" name="list" value="brainnetome">
+	        <input type="hidden" name="url_or_message" value="">
+	        <li style="font: 15px/18px Arial, Helvetica, sans-serif; text-align:left;">Your email address: <input type="text" name="email"> 
+	        </li><li style="font: 15px/18px Arial, Helvetica, sans-serif; text-align:left;">Choose an action:
+	        <select name="action">
+			<option value="subscribe">Subscribe</option>
+			<option value="unsubscribe">Unsubscribe</option>
+			<option value="set digest">Turn Digest mode on</option>
+			<option value="unset digest">Turn Digest mode off</option>
+			<option value="set vacation">Turn Vacation mode on</option>
+			<option value="unset vacation">Turn Vacation mode off</option>
+			<option value="help">Get Help</option>
+			</select>
+			<input type="submit" value="Go!"> </li>
+			<li style="font: 15px/18px Arial, Helvetica, sans-serif; text-align:left;"> After successful subscription, please send your questions to <a href="mailto:brainnetome@freelists.org" sl-processed="1">brainnetome@freelists.org</a> </li>
+	              </strong></form>
+		
+		
+	</div> <!-- middle -->
+
+
+	<!-- footer -->
+	<div id="footer">
+		<div id="footer_nav">
+			<div id="nav_brainnetomeAtlasOverview"  class="children" style="width:210px;">
+				<h2>Brainnetome Atlas</h2>
+				<p>Brainnetome atlas will be an in vivo map, with more fine-grained functional brain subregions and detailed anatomical and functional connection patterns for each area, which could help researchers to
+	more accurately describe the locations of the activation or connectivity in the brain…<a href="brainnetome.html" style="color: #DDDDDD">more</a></p>
+			</div>
+			<div id="nav_getInTouch"  class="children">
+				<h2>Get in Touch</h2>
+				<p>Brainnetome Center
+				<p>National Laboratory of Pattern Recognition, Institute of Automation, The Chinese Academy of Sciences, 100190, PR China</p>
+				<p>Telephone: +(86) 010-8254 4778
+				<br>Fax:+ (86) 010-6255 1993
+				<br>Email:<a href ="mailto:brainnetome.atlas@nlpr.ia.ac.cn?subject=[Brainnetome Contact]">brainnetome.atlas@nlpr.ia.ac.cn </a></p>
+			</div>
+			<div id="nav_relatedDownload"  class="children">
+				<h2>Related Download</h2>
+				<ul>
+	      	<li><a href="http://www.nitrc.org/projects/bn_atlas" target="_blank">Brainnetome Atlas @NITRC</a></li>
+	        <li><a href="http://www.fil.ion.ucl.ac.uk/spm/ext/#Brainnetome" target="_blank">Brainnetome Atlas @SPM</a></li>
+	        <li><a href="http://atlas.brainnetome.org/BrainBrowser/SurfaceViewer.html" target="_blank">Brainnetome Atlas @BrainBrowser</a></li>
+			<li><a href="https://scalablebrainatlas.incf.org/human/BNA" target="_blank">Brainnetome Atlas @Scalable Brain Atlas</a></li>
+			  </ul>
+			</div>
+			<div id="nav_affiliations"  class="children">
+				<h2>Affiliations</h2>
+				<ul>
+	      	<li><a href="http://www.brainnetome.org/" target="_blank">Brainnetome Center</a></li>
+			    <li><a href="http://www.nlpr.ia.ac.cn/english/" target="_blank">National Laboratory of Pattern Recognition (NLPR)</a></li>
+			    <li><a href="http://www.ia.cas.cn/" target="_blank">Institute of Automation,The Chinese Academy of Sciences (CASIA)</a></li>
+			  </ul>
+			</div>
+			
+		</div>
+		
+	</div><!-- End footer -->
+	
+</div><!-- End site container -->
+
+
+<div id="footer_right">
+	 <p>Copyright © 2014 Brainnetome Center. Institute of Automation.Chinese Academy of Sciences. All rights reserved. (Browser: IE9 and above)</p>
+</div>
+
+<script type="text/javascript"> 
+function request(paras){ 
+	var url = location.href;  
+	var paraString = url.substring(url.indexOf("?")+1,url.length).split("&");  
+	var paraObj = {}  
+	for (i=0; j=paraString[i]; i++){  
+		paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);  
+	}  
+	var returnValue = paraObj[paras.toLowerCase()];  
+	if(typeof(returnValue)=="undefined"){  
+		return "";  
+	}else{  
+		return returnValue;  
+	}  
+} 
+var thename=request('name'); 
+var thecou=request('cou'); 
+var theins=request('ins'); 
+var theemail=request('email'); 
+document.getElementById("register_1").value=thename;
+document.getElementById("register_2").value=thecou;
+document.getElementById("register_3").value=theins;
+document.getElementById("register_4").value=theemail;
+</script>
+</body>
+</html>
+
