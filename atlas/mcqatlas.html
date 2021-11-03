@@ -24,7 +24,36 @@
 		<script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
 		<link rel="stylesheet" href="https://www.x3dom.org/release/x3dom.css">
 		<link rel="stylesheet" href="css/themes/default/style.min.css" />
-
+		<style>
+		#content li,#content-wide li {
+			font: 15px/18px Arial, Helvetica, sans-serif;
+			line-height:100%;
+			margin-bottom: 10px;
+		}
+        .dropdown-content {
+            font-family: Arial, Helvetica, sans-serif;
+            display: none;
+            position: absolute;
+            background-color: rgba(0.3, 0.3, 0.3, 0.6);
+            min-width: 140px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            /* menu items */
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #44ABDA;
+        }
+        #menu-item-4098:hover .dropdown-content {
+            display: block;
+        }
+		</style>
 	</head>
 
 <body>
@@ -46,7 +75,13 @@
 		<ul id="navigation" class="navigation">
 			<li id="menu-item-4061" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4061"><a href="index.html"><span>Home</span></a></li>
 			<li id="menu-item-4097" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4097"><a href="bnatlas.html"><span>Human Atlas</span></a></li>
-			<li id="menu-item-4098" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item menu-item-4098"><a href="mcqatlas.html"><span>Macaque Atlas</span></a></li>
+			<li id="menu-item-4098" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item menu-item-4098"><a href="mcqatlas.html"><span>Macaque Atlas</span></a>
+				<div class="dropdown-content">
+                    <a class="viewBtn" id="Home">Home</a>
+                    <a class="viewBtn" id="Atlas">Atlas</a>
+                    <a class="viewBtn" id="Download">Download</a>
+                </div>
+			</li>
 			<li id="menu-item-4058" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4058"><a href="download.html"><span>Download</span></a></li>
 			<li id="menu-item-4124" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4124"><a href="publications.html"><span>Publications</span></a></li>
 			<li id="menu-item-4130" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4130"><a href="faqs.html"><span>FAQs</span></a></li>
@@ -61,8 +96,78 @@
 
 
 	<!-- "Middle" area contains all content between the top navigation and the footer -->
-	<div id="middle">
-		
+<div id="middle">
+<div id = "atlas-description">
+		<div id="content" class="editable">
+		<h2 id="Macaque Brainnetome Atlas"><strong>Macaque Brainnetome Atlas</strong></h2>
+			<p><a>Macaque Brainnetome Atlas (MBA)</a> is a new macaque monkey atlas characterized by the anatomical connectivity of 304 subregions accompanied with the structural and the resting functional connectome. Compared with the existing monkey brain atlas, our atlas has several advantages: 1) the population atlas uses high spatial and angular resolution DWI images of 8 ex-vivo monkey samples to present the reproducible connectivity contrast; 2) it conveys both detailed structural and resting functional connection pattern of each subregion; 3) A comprehensive validation was conducted across different dataset including ex-vivo, in-vivo MRI images and tracer study; 4) white surface (white/gray matter interface) based tracking was used for cortical parcellation to avoid streamlines originating from gray matter where the orientation estimation uncertainty increases; 5) we provide both surface and volume versions of the atlas for convenient and extensive usage. </p>
+		<h2 id="Brainnetome Macaque PM Dataset"><strong>Brainnetome Macaque PM Dataset</strong></h2>
+			<p>Brainnetome macaque PM dataset includes post-mortem diffusion data from a 9.4T scanner on eight macaques.</p>
+			<h3 id="Scanner Specifications"><strong>Scanner Specifications</strong></h3>
+			<ul class ="list">
+				<li>Scanner type: 9.4T Bruker scanner (Bruker Biospec 94/30 USR, Ettlingen, Baden-Wurttemberg)</li>
+				<li>Coil: a 72 mm inner-diameter quadrature birdcage RF coil (Bruker Biospec, Ettlingen, Baden-Wurttemberg)</li>
+			</ul>
+<!-- 			<p><br></p> -->
+			<h3 id="Species"><strong>Species</strong></h3>
+			<p><i>Macaca mulatta</i></p>
+			<h3 id="Sample Description"><strong>Sample Description</strong></h3>
+			<ul class ="list">
+				<li>Sample size: 8</li>
+				<li>Age distribution: 4-7 years (mean 5.6, std 1.06)</li>
+				<li>Sex distribution: n=2 male, n=6 female</li>
+			</ul>
+			<p><a>Click here for the full sample description (.csv)</a></p>
+			<h3 id="Scan sequences"><strong>Scan sequences</strong></h3>
+			<p>Diffusion-weighted</p>
+			<ul class ="list">
+				<li>3D spin-echo EPI diffusion weighted sequence</li>
+				<li>Matrix size: 148×120×160</li>
+				<li>Resolution: 0.45×0.45×0.45 mm<sup>3</sup></li>
+				<li>FOV: 66.6×54.0×72.0 mm</li>
+				<li>TE: 25ms</li>
+				<li>TR: 200ms</li>
+				<li>Multiple shells: 6 b = 0 s/mm<sup>2</sup>, 60 b = 2400 s/mm<sup>2</sup>, 120 b=4800 s/mm<sup>2</sup></li>
+			</ul>
+			<p>T2-weighted</p>
+			<ul class ="list">
+				<li>3D MSME sequence</li>
+				<li>Matrix size: 240×180×267</li>
+				<li>Resolution: 0.3×0.3×0.3 mm<sup>3</sup></li>
+				<li>FOV: 72.0×54.0×80.1mm</li>
+				<li>TE: 36 ms</li>
+				<li>TR: 2000 ms</li>
+			</ul>
+			<h3 id="Publications"><strong>Publications</strong></h3>
+			<p>Lu et al., in submission</p>
+			<h3 id="Downloads"><strong>Downloads</strong></h3>
+			<p><a href="">Click here to download the data.</a></p>
+			<h2 id="Macaque Atlas Web-view"><strong>Macaque Atlas Web-viewer</strong></h2>
+			<p style="cursor:pointer;color: #0168db;" onclick="view_atlas()">Click here to view the Macaque Atlas in the web.</p>
+		</div>
+	<div id="sidebar-rt">
+		<div id="sidebar-content3" class="editable">
+	        	<a name="c"></a>
+					<div class="sidebox">
+				        <h2 style="border-bottom:1px solid #cb6; padding-bottom:10px;margin-bottom:10px;">Navigation</h2>
+					<a href="#Macaque Brainnetome Atlas">Macaque Brainnetome Atlas</a>
+	       			<a href="#Brainnetome Macaque PM Dataset">Brainnetome Macaque PM Dataset</a>
+					<li><a href="#Scanner Specifications">Scanner Specifications</a></li>
+					<li><a href="#Species">Species</a><br/></li>
+					<li><a href="#Sample Description">Sample Description</a><br/></li>
+					<li><a href="#Scan sequences">Scan sequences</a><br/></li>
+					<li><a href="#Publications">Publications</a><br/></li>
+					<li><a href="#Downloads">Downloads</a><br/></li>
+					<a href="#Macaque Atlas Web-view">Macaque Atlas Web-viewer</a>
+					<p>&nbsp;</p>
+					<a href=""><i>If no download, please click here!</i></a><br/>
+			<p>&nbsp;</p>
+			</div>
+	    </div>
+	 </div>
+	</div>
+<div style="position:relative;clear:both;"></div>
+<div id="atlas-view" style="display: none">
 <!-- LEFT: macaque atlas treeview -->
 <div style="position:relative;float:left;padding:10px;width:220px;overflow:auto;height:680px;">
 	<input type="text" id="plugins4_q" value="" class="input" 
@@ -81,13 +186,14 @@
   	<div style="width:450px;height:300px;position:relative;float:left;">
   		<x3d disableRightDrag='true' id='x3dElem' style="width:450px;height:300px;">
 			<scene>
-				<inline nameSpaceName="macaque" mapDEFToID="true"  onload='x3d_onload();' url="mcqatlas/3dmodel/macaque.x3d"> </inline>
+				<inline id="inline_obj" nameSpaceName="macaque" mapDEFToID="true" onload='x3d_onload();' url="mcqatlas/3dmodel/macaque_compress.x3d"> </inline>
 			</scene>
 		</x3d>
 	</div>
 
 	<div id="description" style="padding:20px;width:200px;position:relative;float:left;display: none;">
 	  <button id="toggle-area-map">display labels</button><span id="status"></span><br>
+	  <button id="recoverPosition">Recover Position</button><br>
 	  <button id="recoverOpacity">Recover Opacity</button>
 	  <button id="lessOpacity">-</button>
 	  <button id="moreOpacity">+</button><span id="opacity"></span><br>
@@ -133,8 +239,8 @@
 	  <span>Copyright (C) Brainnetome Center, CASIA</span>
   </div>
 </div>
-		
-	</div> <!-- middle -->
+</div>	
+</div> <!-- middle -->
 
 
 	<!-- footer -->

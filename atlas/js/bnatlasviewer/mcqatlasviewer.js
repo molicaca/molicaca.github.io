@@ -30,9 +30,34 @@ window.addEventListener("load",function()
 	// loadBarCharts();
 	loadTreeViewData();
 
-  
+    var offset = $("#sidebar-rt").offset();
+    var documentHeight = $(document).height();
+    $(window).scroll(function() {
+        var sideBarHeight = $("#sidebar-rt").height();
+        if ($(window).scrollTop() > offset.top) {
+            var newPosition = ($(window).scrollTop() - offset.top) + 10;
+            var maxPosition = documentHeight - (sideBarHeight + 368);
+            if (newPosition > maxPosition) {
+                newPosition = maxPosition;
+            }
+            $("#sidebar-rt").stop(true,true).animate({
+                marginTop: newPosition
+            });
+        } else {
+            $("#sidebar-rt").stop(true,true).animate({
+                marginTop: 0
+            });
+        };
+    });
+
+  	var buttons = document.getElementsByClassName("viewBtn");
+	for (let i = 0; i < buttons.length; i++)
+		buttons[i].addEventListener("click", onButtonClick, false);
   $("#toggle-area-map").on("click",ToggleAreaMapHandler);
   $("#toggle-fiber").on("click",ToggleFiberHandler);
+  $("#recoverPosition").on("click",function(){
+	document.getElementById('x3dElem').runtime.resetView();
+	});
   $("#recoverOpacity").on("click",function(){
 	var maters	=	document.getElementsByTagName('Material'); 
 	var length = maters.length;
@@ -41,10 +66,10 @@ window.addEventListener("load",function()
 		};
 	});
   $("#lessOpacity").on("click",function(){
-			GLOBAL.opacity=Math.min(0.95,Math.max(0,GLOBAL.opacity-0.1));Update();
+			GLOBAL.opacity=Math.min(0.95,Math.max(0.01,GLOBAL.opacity-0.1));Update();
 	});
   $("#moreOpacity").on("click",function(){
-			GLOBAL.opacity=Math.min(0.95,Math.max(0,GLOBAL.opacity+0.1));Update();
+			GLOBAL.opacity=Math.max(0.01,Math.min(0.95,GLOBAL.opacity+0.1));Update();
 	});
   
 	$("#status").html("status: "+(GLOBAL.area_map_flag?"on":"off"));
@@ -489,8 +514,6 @@ function x3d_onload(){
 	document.getElementById("display-container").style.display='none';
 	document.getElementById("x3dElem").style.width='400px';
 	document.getElementById("x3dElem").style.height='300px';
-	document.getElementById("description").style.display='show';
-	document.getElementById("figure-name").style.display='show';
 	$("#figure-name").show();
 	$("#description").show();
 
@@ -510,6 +533,7 @@ function x3d_onload(){
 	for(var i = 0;i < length;i++){
 		var obj = group[i];
 		var mater = maters[i];
+		maters[i].setAttribute('transparency',0);
 		// mater.setAttribute('title',names[parseInt(mater.getAttribute('id').slice(-3),10)-1].Name);
 		//鼠标悬停事件
 		obj.onmouseover = function(){
@@ -570,4 +594,38 @@ function select_fiber(id){
 			data = $.parseJSON(data);
 			GLOBAL.SC_chart.setOption(data);
 		});
+}
+
+function onButtonClick(event) {
+	var el = this.parentNode;
+	el.style.display = "none";
+	setTimeout(function() { //close menu
+		el.style.removeProperty("display");
+	}, 500);
+	if (event.target.id === "Home") {return_home();return 0;}
+	if (event.target.id == "Atlas") {view_atlas();return 0;}
+	if (event.target.id == "Download") {console.log("Download");return 0;}
+}
+
+function view_atlas(){
+	document.getElementById("atlas-description").style.display='none';
+	$("#atlas-view").show();
+	// document.getElementById("canvas-container").style.display='none';
+	// document.getElementById("canvas-container-fiber").style.display='none';
+	// document.getElementById("description").style.display='none';
+	// $("#display-splash").show();
+	// $("#display-container").show();
+	// setTimeout(function() { 
+	// $("#canvas-container").show();
+	// document.getElementById("display-splash").style.display='none';
+	// document.getElementById("display-container").style.display='none';
+	// // document.getElementById("x3dElem").style.width='400px';
+	// // document.getElementById("x3dElem").style.height='300px';
+	// $("#canvas-container-fiber").show();
+	// $("#description").show();
+	// }, 500);
+}
+function return_home(){
+	document.getElementById("atlas-view").style.display='none';
+	$("#atlas-description").show();
 }
