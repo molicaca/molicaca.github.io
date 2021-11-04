@@ -88,6 +88,7 @@ window.addEventListener("load",function()
 				// initializeFiber('fib');
 				// initializeFiber('fun');
 				$('#plugins4').jstree('select_node','1');
+				$("#recoverOpacity").click();
 			});
 
 			Update();
@@ -596,16 +597,16 @@ function select_fiber(id){
 		});
 }
 
-function onButtonClick(event) {
-	var el = this.parentNode;
-	el.style.display = "none";
-	setTimeout(function() { //close menu
-		el.style.removeProperty("display");
-	}, 500);
-	if (event.target.id === "Home") {return_home();return 0;}
-	if (event.target.id == "Atlas") {view_atlas();return 0;}
-	if (event.target.id == "Download") {console.log("Download");return 0;}
-}
+// function onButtonClick(event) {
+// 	var el = this.parentNode;
+// 	el.style.display = "none";
+// 	setTimeout(function() { //close menu
+// 		el.style.removeProperty("display");
+// 	}, 500);
+// 	if (event.target.id === "Home") {return_home();return 0;}
+// 	if (event.target.id == "Atlas") {view_atlas();return 0;}
+// 	if (event.target.id == "Download") {console.log("Download");return 0;}
+// }
 
 function view_atlas(){
 	document.getElementById("atlas-description").style.display='none';

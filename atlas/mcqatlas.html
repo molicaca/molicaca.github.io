@@ -25,37 +25,11 @@
 		<link rel="stylesheet" href="https://www.x3dom.org/release/x3dom.css">
 		<link rel="stylesheet" href="css/themes/default/style.min.css" />
 		<style>
-		a{
-			cursor:pointer;
-		}
 		#content li,#content-wide li {
 			font: 15px/18px Arial, Helvetica, sans-serif;
 			line-height:100%;
 			margin-bottom: 10px;
 		}
-        .dropdown-content {
-            font-family: Arial, Helvetica, sans-serif;
-            display: none;
-            position: absolute;
-            background-color: rgba(0.3, 0.3, 0.3, 0.6);
-            min-width: 140px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-        .dropdown-content a {
-            /* menu items */
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-        .dropdown-content a:hover {
-            background-color: #44ABDA;
-        }
-        #menu-item-4098:hover .dropdown-content {
-            display: block;
-        }
 		</style>
 	</head>
 
@@ -79,11 +53,11 @@
 			<li id="menu-item-4061" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4061"><a href="index.html"><span>Home</span></a></li>
 			<li id="menu-item-4097" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4097"><a href="bnatlas.html"><span>Human Atlas</span></a></li>
 			<li id="menu-item-4098" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item menu-item-4098"><a href="mcqatlas.html"><span>Macaque Atlas</span></a>
-				<div class="dropdown-content">
+<!-- 				<div class="dropdown-content">
                     <a class="viewBtn" id="Home">Home</a>
                     <a class="viewBtn" id="Atlas">Atlas</a>
                     <a class="viewBtn" id="Download">Download</a>
-                </div>
+                </div> -->
 			</li>
 			<li id="menu-item-4058" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4058"><a href="download.html"><span>Download</span></a></li>
 			<li id="menu-item-4124" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4124"><a href="publications.html"><span>Publications</span></a></li>
@@ -103,7 +77,11 @@
 <div id = "atlas-description">
 		<div id="content" class="editable">
 		<h2 id="Macaque Brainnetome Atlas"><strong>Macaque Brainnetome Atlas</strong></h2>
-			<p><a download="mcqatlas/data/ROIs.zip">Macaque Brainnetome Atlas (MBA)</a> is a new macaque monkey atlas characterized by the anatomical connectivity of 304 subregions accompanied with the structural and the resting functional connectome. Compared with the existing monkey brain atlas, our atlas has several advantages: 1) the population atlas uses high spatial and angular resolution DWI images of 8 ex-vivo monkey samples to present the reproducible connectivity contrast; 2) it conveys both detailed structural and resting functional connection pattern of each subregion; 3) A comprehensive validation was conducted across different dataset including ex-vivo, in-vivo MRI images and tracer study; 4) white surface (white/gray matter interface) based tracking was used for cortical parcellation to avoid streamlines originating from gray matter where the orientation estimation uncertainty increases; 5) we provide both surface and volume versions of the atlas for convenient and extensive usage. </p>
+			<p><a href="mcqatlas/data/ROIs.zip" download="ROIs.zip">Macaque Brainnetome Atlas (MBA)</a> is a new macaque monkey atlas characterized by the anatomical connectivity of 304 subregions accompanied with the structural and the resting functional connectome. Compared with the existing monkey brain atlas, our atlas has several advantages: 1) the population atlas uses high spatial and angular resolution DWI images of 8 ex-vivo monkey samples to present the reproducible connectivity contrast; 2) it conveys both detailed structural and resting functional connection pattern of each subregion; 3) A comprehensive validation was conducted across different dataset including ex-vivo, in-vivo MRI images and tracer study; 4) white surface (white/gray matter interface) based tracking was used for cortical parcellation to avoid streamlines originating from gray matter where the orientation estimation uncertainty increases; 5) we provide both surface and volume versions of the atlas for convenient and extensive usage.<br/>Click <span style="cursor:pointer;color: #0168db;" onclick="view_atlas()">here</span> to view Macaque Brainnetome Atlas in the web.</p>
+<!-- 			<h3 id="Macaque Atlas Web-view"><strong>Macaque Atlas Web-viewer</strong></h2>
+				<p style="cursor:pointer;color: #0168db;" onclick="view_atlas()">Click here to view the Macaque Atlas in the web.</p>
+			<h3 id="Macaque_Atlas_Downloads"><strong>Download</strong></h2>
+				<p><a>Click here to download the  Macaque Brainnetome Atlas.</a></p> -->
 		<h2 id="Brainnetome Macaque PM Dataset"><strong>Brainnetome Macaque PM Dataset</strong></h2>
 			<p>Brainnetome macaque PM dataset includes post-mortem diffusion data from a 9.4T scanner on eight macaques.</p>
 			<h3 id="Scanner Specifications"><strong>Scanner Specifications</strong></h3>
@@ -141,12 +119,10 @@
 				<li>TE: 36 ms</li>
 				<li>TR: 2000 ms</li>
 			</ul>
-			<h3 id="Publications"><strong>Publications</strong></h3>
+			<h3 id="Dataset_Downloads"><strong>Download</strong></h3>
+			<p><a href="">Click here to download the Brainnetome Macaque PM Dataset.</a></p>
+			<h2 id="Publications"><strong>Publications</strong></h3>
 			<p>Lu et al., in submission</p>
-			<h3 id="Downloads"><strong>Downloads</strong></h3>
-			<p><a href="">Click here to download the data.</a></p>
-			<h2 id="Macaque Atlas Web-view"><strong>Macaque Atlas Web-viewer</strong></h2>
-			<p style="cursor:pointer;color: #0168db;" onclick="view_atlas()">Click here to view the Macaque Atlas in the web.</p>
 		</div>
 	<div id="sidebar-rt">
 		<div id="sidebar-content3" class="editable">
@@ -154,14 +130,15 @@
 					<div class="sidebox">
 				        <h2 style="border-bottom:1px solid #cb6; padding-bottom:10px;margin-bottom:10px;">Navigation</h2>
 					<a href="#Macaque Brainnetome Atlas">Macaque Brainnetome Atlas</a>
+					<li><span style="cursor:pointer;color: #0168db;" onclick="view_atlas()">Macaque Atlas Web-viewer</span><br/></li>
+					<li><a href="">Download</a></li>
 	       			<a href="#Brainnetome Macaque PM Dataset">Brainnetome Macaque PM Dataset</a>
 					<li><a href="#Scanner Specifications">Scanner Specifications</a></li>
 					<li><a href="#Species">Species</a><br/></li>
 					<li><a href="#Sample Description">Sample Description</a><br/></li>
 					<li><a href="#Scan sequences">Scan sequences</a><br/></li>
-					<li><a href="#Publications">Publications</a><br/></li>
-					<li><a href="#Downloads">Downloads</a><br/></li>
-					<a href="#Macaque Atlas Web-view">Macaque Atlas Web-viewer</a>
+					<li><a href="#Dataset_Downloads">Download</a><br/></li>
+					<a href="#Publications">Publications</a>
 					<p>&nbsp;</p>
 					<a href=""><i>If no download, please click here!</i></a><br/>
 			<p>&nbsp;</p>
@@ -195,7 +172,8 @@
 	</div>
 
 	<div id="description" style="padding:20px;width:200px;position:relative;float:left;display: none;">
-	  <button id="toggle-area-map">display labels</button><span id="status"></span><br>
+<!-- 	  <button id="toggle-area-map">display labels</button><span id="status"></span><br> -->
+	  <br/>
 	  <button id="recoverPosition">Recover Position</button><br>
 	  <button id="recoverOpacity">Recover Opacity</button>
 	  <button id="lessOpacity">-</button>
