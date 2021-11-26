@@ -54,7 +54,7 @@ window.addEventListener("load",function()
 	for (let i = 0; i < buttons.length; i++)
 		buttons[i].addEventListener("click", onButtonClick, false);
   $("#toggle-area-map").on("click",ToggleAreaMapHandler);
-  $("#toggle-fiber").on("click",ToggleFiberHandler);
+  // $("#toggle-fiber").on("click",ToggleFiberHandler);
   $("#recoverPosition").on("click",function(){
 	document.getElementById('x3dElem').runtime.resetView();
 	});
