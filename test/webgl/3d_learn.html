@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Webgl for 3D</title>
+</head>
+<body>
+	<canvas id='mycanvas' width="500px" height='600px'></canvas>
+</body>
+<script type="text/javascript">
+	vertex_shader = `// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec4 a_position;
+ 
+// A matrix to transform the positions by
+uniform mat4 u_matrix;
+ 
+// all shaders have a main function
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+}`
+	canvas = document.getElementById('mycanvas');
+	webgl  = canvas.getContext('webgl2');
+	if(webgl == null) {console.log('failed');}
+
+
+</script>
+</html>

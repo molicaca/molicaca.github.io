@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>闭包--自执行函数--案例--淘宝例子</title>
+    <style type="text/css">
+ 
+        .container{
+            width: 300px;
+            height: 150px;
+            background-color: #16A085;
+        }
+        .nav_ul{
+            padding: 0;
+            list-style: none;
+            height: 35px;
+        }
+        .nav_ul li{
+            float: left;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            width: 25%;
+            transition:  all .5s;
+            cursor: pointer;
+        }
+        .select_li{
+            color: white;
+            border-bottom: 2px solid #FD4401;
+        }
+        .content{
+            width: 300px;
+        }
+        .content div ul{
+            padding: 0;
+            list-style: none;
+            width: 300px;
+        }
+        .content div ul li{
+            float: left;
+            width: 50%;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+        }
+        .content div{
+            position: absolute;
+            left: 0;
+            top: 45px;
+            display: none;
+        }
+        .content .select_div{
+            display: block;
+        }
+ 
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <ul class="nav_ul">
+                <li class="select_li">剧集</li>
+                <li>电影</li>
+                <li>综艺</li>
+                <li>动漫</li>
+            </ul>
+        </div>
+        <div class="content">
+            <div class="select_div">
+                <ul>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">琅琊榜</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">盲约</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">无心法师</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">高能医少</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">加勒比</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">绣春刀</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">鲛珠传</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">变形金刚</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">坑王驾到</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">快乐大本营</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">明星大侦探</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">爸爸去哪儿</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">友人帐</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">黑贼王</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">你的名字</li>
+                    <li οnclick="window.location.href='https://www.hao123.com/'">柯南</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        var liList=document.querySelector('.nav_ul').querySelectorAll('li');
+        var divList=document.querySelector('.content').querySelectorAll('div');
+        var timer=null;
+        // 每一个li鼠标进入事件
+        for(var index=0;index<liList.length;index++){
+    //        自执行函数在一写完、一绑定的时候，不需要触发就执行
+    //        自执行函数返回function，实际上 当鼠标进入时实际上执行的是返回的函数
+            liList[index].οnmοuseenter= (function (selectIndex) {
+                return function () {
+                    //增加延迟事件
+                    timer=setTimeout(function () {
+                        //清除所有样式 li 显示相应div中的ul 样式也去掉
+                        for(var i=0;i<liList.length;i++){
+                            liList[i].removeAttribute('class');
+                            divList[i].removeAttribute('class');
+                        }
+                        liList[selectIndex].setAttribute('class','select_li');
+                        divList[selectIndex].setAttribute('class','select_div');
+                    },600);
+                };
+            }(index));
+    //        添加鼠标移出事件，保证离开的时候清除延迟器，不影响下一次操作
+            liList[index].onmouseleave = function (eve) {
+                clearTimeout(timer);
+            };
+        }
+    </script>
+ 
+</body>
