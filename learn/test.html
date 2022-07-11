@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+	<canvas id="canvas"  width="600" height="600"></canvas>
+  <div id="uiContainer">
+  <div id="ui">
+    <div id="x"></div>
+    <div id="y"></div>
+    <div id="z"></div>
+    <div id="opacity"></div>
+    <div id="z"></div>
+  </div>
+</div>
+</body>
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-lessons-ui.js"></script>
+<script src="js/nifti-reader.js"></script>
+<script src="js/webgl-util.js"></script>
+<script src="js/gl-matrix-min.js"></script>
+<script type="text/javascript">
+	// "use strict";
+
+var vertexShaderSource = `#version 300 es
+
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+layout(location=0) in vec2 a_position;
+// layout(location=1) in vec2 a_texCoord;
+
+// Used to pass the texture coordinates to the fragment shader
+out vec2 v_texCoord;
+
+// all shaders have a main function
+void main() {
+  gl_Position = vec4(a_position, 0, 1);
+
+  // pass the texCoord to the fragment shader
+  // The GPU will interpolate this value between points.
+  v_texCoord = vec2(0.5, 0.5) + 0.5 * a_position;
+}
+`;
+
+var fragmentShaderSource = `#version 300 es
+
+// fragment shaders don't have a default precision so we need
+// to pick one. highp is a good default. It means "high precision"
+precision highp int;
+precision highp float;
+
+uniform highp sampler3D volume;
+// WebGL doesn't support 1D textures, so we use a 2D texture for the transfer function
+uniform highp sampler2D transfer_fcn;
+
+uniform ivec3 volume_center;
+uniform ivec3 volume_dims;
+uniform vec3 volume_scale;
+
+uniform int flag;
+uniform float opacity;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  vec3 volume_translation = vec3(0.5) - volume_scale * 0.5;
+  float val = 0.0;
+  if(flag == 2)  val = texture(volume,  vec3(float(volume_center.x)/float(volume_dims.x), (1.0-v_texCoord.x-volume_translation.y)/volume_scale.y,(v_texCoord.y-volume_translation.z)/volume_scale.z)).r;
+  else if(flag == 3)  val = texture(volume, vec3(((1.0-v_texCoord.x)-volume_translation.x)/volume_scale.x, float(volume_center.y)/float(volume_dims.y), (v_texCoord.y-volume_translation.z)/volume_scale.z)).r;
+  else if(flag == 1)  val = texture(volume, vec3((1.0-v_texCoord.x-volume_translation.x)/volume_scale.x, (v_texCoord.y-volume_translation.y)/volume_scale.y, float(volume_center.z)/float(volume_dims.z))).r;
+
+  // vec4 val_color = vec4(texture(transfer_fcn, vec2(val, 0.5)).rgb, 1);
+
+  // outColor = vec4(val_color.rgb, opacity);
+  outColor = texture(transfer_fcn, vec2(val, 0.5)).rgba*vec4(1,1,1,opacity);
+}
+`;
+
+
+var colorOpacity = 2;
+var opacity = 1.0;
+var colormap = null;
+var gl = null;
+var program = null;
+var shader = null;
+var color_shader = null;
+var vao = null;
+var color_vao = null;
+var center = [99,99,69];
+var volScale = null;
+
+var url = "data/Template.nii.gz";
+var req = new XMLHttpRequest();
+var hdr = null;
+
+function load_volume(){
+    req.open("GET", url, true);
+    req.responseType = "arraybuffer";
+    req.onprogress = function(evt){
+      //
+    };
+    req.onerror = function(evt){
+      console.log("");
+    };
+    req.onload = function(evt){
+      var databuffer = req.response;
+      if(databuffer){
+        hdr = nifti.readHeader(databuffer);
+        var img;
+        if(nifti.isCompressed(databuffer)){
+          img = nifti.readImage(hdr,nifti.decompress(databuffer));
+        }
+        else img = nifti.readImage(hdr,databuffer);
+        render(hdr,img);
+      }
+      else {
+        console.log("Unable to buffer from the url!");
+      }
+    };
+    req.send();
+}
+
+function load_segmentation(){
+  req =  new XMLHttpRequest();
+  req.open("GET", "data/BNA_MACAQUE_LR_304.nii.gz", true);
+  req.responseType = "arraybuffer";
+  req.onprogress = function(evt){
+    //
+  };
+  req.onerror = function(evt){
+    console.log("");
+  };
+  req.onload = function(evt){
+    var databuffer = req.response;
+    if(databuffer){
+      hdr = nifti.readHeader(databuffer);
+      console.log(hdr.datatypeCode);
+      var img;
+      if(nifti.isCompressed(databuffer)){
+        img = nifti.readImage(hdr,nifti.decompress(databuffer));
+      }
+      else img = nifti.readImage(hdr,databuffer);
+
+    var imgRaw;
+    if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT8) {
+        imgRaw = new Uint8Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT16) {
+        imgRaw = new Int16Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT32) {
+        imgRaw = new Int32Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT32) {
+        imgRaw = new Float32Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT64) {
+        imgRaw = new Float64Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT8) {
+        imgRaw = new Int8Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT16) {
+        imgRaw = new Uint16Array(img);
+    } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT32) {
+        imgRaw = new Uint32Array(img);
+    } else {
+      console.log('Unsupported data type %d', hdr.datatypeCode);
+      var e = new Error('Unsupported data type', hdr.datatypeCode);
+      throw e;
+    }
+
+    var vox = imgRaw.length;
+    var img32 = new Float32Array(vox);
+    for (var i = 0; i < vox; i++) img32[i] = imgRaw[i]/304;
+
+    var tex = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_3D, tex);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.pixelStorei( gl.UNPACK_ALIGNMENT, 1 )
+    gl.texStorage3D(gl.TEXTURE_3D, 1, gl.R32F, hdr.dims[1], hdr.dims[2], hdr.dims[3]);
+    gl.texSubImage3D(gl.TEXTURE_3D, 0, 0, 0, 0,hdr.dims[1], hdr.dims[2], hdr.dims[3],gl.RED, gl.FLOAT , img32);
+    load_volume();
+    }
+    else {
+      console.log("Unable to buffer from the url!");
+    }
+  };
+  req.send();
+}
+function render(hdr,img) {
+
+  var imgRaw;
+  if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT8) {
+      imgRaw = new Uint8Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT16) {
+      imgRaw = new Int16Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT32) {
+      imgRaw = new Int32Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT32) {
+      imgRaw = new Float32Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT64) {
+      imgRaw = new Float64Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT8) {
+      imgRaw = new Int8Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT16) {
+      imgRaw = new Uint16Array(img);
+  } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT32) {
+      imgRaw = new Uint32Array(img);
+  } else {
+    console.log('Unsupported data type %d', hdr.datatypeCode);
+    var e = new Error('Unsupported data type', hdr.datatypeCode);
+    throw e;
+  }
+  var vox = imgRaw.length;
+  var mn = Infinity;
+  var mx = -Infinity;
+  for (var i = 0; i < vox; i++){
+    if(!isFinite(imgRaw[i])) contine;
+    if (imgRaw[i] < mn) mn = imgRaw[i];
+    if (imgRaw[i] > mx) mx = imgRaw[i];
+  }
+  if((isFinite(hdr.scl_slope)) && (isFinite(hdr.scl_inter)) && (hdr.scl_slope != 0.0) ) {
+    mn = mn * hdr.scl_slope + hdr.scl_inter;
+    mx = mx * hdr.scl_slope + hdr.scl_inter;
+  }
+  else {
+    hdr.scl_slope = 1.0;
+    hdr.scl_inter = 0.0;
+  }
+
+  hdr.global_min = mn;
+  hdr.global_max = mx;
+  if ((!isFinite(hdr.cal_min)) || (!isFinite(hdr.cal_max)) || (hdr.cal_min >= hdr.cal_max)) {
+    hdr.cal_min = mn;
+    hdr.cal_max = mx;
+  }
+
+  // 将数据转换成uint8
+  var img8 = new Uint8Array(vox);
+  var scale = 1;
+  if (mx > mn) scale = 255 / (mx-mn);
+  for (i = 0; i < (vox-1); i++) {
+    var v = imgRaw[i];
+    v = (v * hdr.scl_slope) + hdr.scl_inter;
+    if (v < mn)
+      img8[i] = 0;
+    else if (v > mx)
+      img8[i] = 255;
+    else
+      img8[i] = (v-mn) * scale;
+  }
+
+  // setup GLSL program
+  // console.log(gl);
+  shader = new Shader(vertexShaderSource, fragmentShaderSource);
+  shader.use(gl);
+
+  // Create a vertex array object (attribute state)
+  vao = gl.createVertexArray();
+
+  // and make it the one we're currently working with
+  gl.bindVertexArray(vao);
+
+  // Create a buffer and put a single pixel space rectangle in
+  // it (2 triangles)
+  var positionBuffer = gl.createBuffer();
+
+  // Turn on the attribute
+  // gl.enableVertexAttribArray(positionAttributeLocation);
+  gl.enableVertexAttribArray(0);
+
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+     -1.0, -1.0,
+      1.0, -1.0,
+     -1.0,  1.0,
+     -1.0,  1.0,
+      1.0, -1.0,
+      1.0,  1.0,
+  ]), gl.STATIC_DRAW);
+
+    gl.vertexAttribPointer( 0, 2, gl.FLOAT, false, 0, 0 );
+
+
+  // 计算最长轴归一化纹理空间
+  var longestAxis = Math.max(hdr.dims[1], Math.max(hdr.dims[2], hdr.dims[3]));
+  volScale = [hdr.dims[1] / longestAxis, hdr.dims[2] / longestAxis,
+    hdr.dims[3] / longestAxis];
+    console.log(volScale);
+
+  var tex = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_3D, tex);
+  gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.pixelStorei( gl.UNPACK_ALIGNMENT, 1 )
+  gl.texStorage3D(gl.TEXTURE_3D, 1, gl.R8, hdr.dims[1], hdr.dims[2], hdr.dims[3]);
+  gl.texSubImage3D(gl.TEXTURE_3D, 0, 0, 0, 0,hdr.dims[1], hdr.dims[2], hdr.dims[3],gl.RED, gl.UNSIGNED_BYTE, img8);
+
+  selectColormap("Gray");
+
+  // Setup a ui.
+  webglLessonsUI.setupSlider("#x", {value: center[0]+1, slide: updatePosition(0), min: 1, max: hdr.dims[1] });
+  webglLessonsUI.setupSlider("#y", {value: center[1]+1, slide: updatePosition(1), min: 1, max: hdr.dims[2] });
+  webglLessonsUI.setupSlider("#z", {value: center[2]+1, slide: updatePosition(2), min: 1, max: hdr.dims[3] });
+  webglLessonsUI.setupSlider("#opacity", {value: opacity*255, slide: updateOpacity(), min: 0.0, max: 255 });
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+
+  drawScene();
+
+
+}
+
+  function updatePosition(index) {
+    return function(event, ui) {
+      center[index] = ui.value-1;
+      drawScene();
+    };
+  }
+  function updateOpacity() {
+    return function(event, ui) {
+      opacity = ui.value/255;
+      drawScene();
+    };
+  }
+
+  function makeLut(Rs, Gs, Bs, As, Is) {
+  //create color lookup table provided arrays of reds, greens, blues, alphas and intensity indices
+  //intensity indices should be in increasing order with the first value 0 and the last 255.
+  // makeLut([0, 255], [0, 0], [0,0], [0,128],[0,255]); //red gradient
+    var lut = new Uint8Array(256 * 4);
+    for (var i = 0; i < (Is.length-1); i++) {
+      //return a + f * (b - a);
+      var idxLo = Is[i];
+      var idxHi = Is[i+1];
+      var idxRng = idxHi - idxLo;
+      var k = idxLo * 4;
+      for (var j = idxLo; j <= idxHi; j++) {
+        var f = (j-idxLo)/idxRng;
+        lut[k] = Rs[i] + f * (Rs[i+1]- Rs[i]); //Red
+        k++;
+        lut[k] = Gs[i] + f * (Gs[i+1]- Gs[i]); //Green
+        k++;
+        lut[k] = Bs[i] + f * (Bs[i+1]- Bs[i]); //Blue
+        k++;
+        // lut[k] = (As[i] + f * (As[i+1]- As[i])) * colorOpacity; //Alpha
+        lut[k] = 255; //Alpha
+        k++;
+      }
+    }
+      return lut;
+  } // makeLut()
+
+  var selectColormap = function(lutName) {
+      var lut = makeLut([0, 255], [0, 255], [0,255], [0,128],[0,255]); //gray
+      if (lutName === "Plasma")
+      lut = makeLut([13, 156, 237, 240],[8, 23, 121, 249],[135, 158, 83, 33],[0, 56, 80, 88], [0, 64, 192, 255]); //plasma
+    if (lutName === "Viridis")
+      lut = makeLut([68,49,53,253],[1,104,183,231],[84,142,121,37],[0,56,80,88],[0,65,192,255]);//viridis
+    if (lutName === "Inferno")
+      lut = makeLut([0,120,237,240],[0,28,105,249],[4,109,37,33],[0,56,80,88],[0,64,192,255]);//inferno
+    var colorName = lutName;
+    if (colormap !== null)
+      gl.deleteTexture(colormap); //release colormap');
+    colormap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, colormap);
+    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, 256, 1);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 256, 1,gl.RGBA, gl.UNSIGNED_BYTE, lut);
+  } // selectColormap()
+
+  function drawScene(){
+
+  shader.use(gl);
+
+  // Tell WebGL how to convert from clip space to pixels
+  gl.viewport(0, 300, 300, 300);
+  gl.scissor(0, 300, 300, 300);
+
+  // Clear the canvas
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  drawTest(1, center);
+
+//   // Tell WebGL how to convert from clip space to pixels
+  gl.viewport(0, 0, 300, 300);
+  gl.scissor(0, 0, 300, 300);
+
+  // Clear the canvas
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  drawTest(2, center);
+
+//   // Tell WebGL how to convert from clip space to pixels
+  gl.viewport(300, 0, 300, 300);
+  gl.scissor(300, 0, 300, 300);
+
+  // Clear the canvas
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  drawTest(3, center);
+  }
+
+function drawTest(flag, center){
+  shader.use(gl);
+
+  gl.bindVertexArray(vao);
+
+  gl.uniform1i(shader.uniforms["volume"], 0);
+  gl.uniform1i(shader.uniforms["transfer_fcn"],1);
+  gl.uniform1i(shader.uniforms["flag"],flag);
+  gl.uniform1f(shader.uniforms["opacity"],1.0);
+  gl.uniform3iv(shader.uniforms["volume_dims"],[hdr.dims[1],hdr.dims[2],hdr.dims[3]]);
+  gl.uniform3iv(shader.uniforms["volume_center"],center);
+  // console.log(volScale);
+  gl.uniform3fv(shader.uniforms["volume_scale"], volScale);
+
+  // Draw the rectangle.
+  var primitiveType = gl.TRIANGLES;
+  var offset = 0;
+  var count = 6;
+  gl.drawArrays(primitiveType, offset, count);
+
+  gl.uniform1i(shader.uniforms["volume"], 2);
+  gl.uniform1i(shader.uniforms["transfer_fcn"],3);
+  gl.uniform1i(shader.uniforms["flag"],flag);
+  gl.uniform1f(shader.uniforms["opacity"],opacity);
+  gl.drawArrays(primitiveType, offset, count);
+
+
+
+}
+
+window.onload = function(){
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  var canvas = document.querySelector("#canvas");
+  gl = canvas.getContext("webgl2");
+  if (!gl) {
+    return;
+  }
+  var ext = gl.getExtension('EXT_color_buffer_float');
+  gl.getExtension('OES_texture_float');
+  gl.getExtension('OES_texture_float_linear');
+  gl.enable(gl.SCISSOR_TEST);
+  gl.enable(gl.BLEND);
+  // // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ZERO);
+  // create the colormap for different labels
+  var colormapImage = new Image();
+  colormapImage.onload = function() {
+    var colormap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, colormap);
+    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.SRGB8_ALPHA8, 305, 1);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 305, 1,
+      gl.RGBA, gl.UNSIGNED_BYTE, colormapImage);
+    load_segmentation();
+    // load_volume();
+    // selectVolume();
+  };
+  colormapImage.src = "data/colormap.png";
+}
+</script>
+</html>

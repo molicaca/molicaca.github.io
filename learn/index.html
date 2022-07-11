@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+	<div id="gl-container">
+		<canvas id="slice-x"></canvas>
+		<canvas id="slice-y"></canvas>
+		<canvas id="slcie-z"></canvas>
+	</div>
+</body>
+<script src="js/FileSaver.js"></script>
+<script src="js/gl-matrix-min.js"></script>
+<script src="js/webgl-util.js"></script>
+<script src="js/nifti-reader.js"></script>
+<script type="text/javascript">
+	var vs_source = 
+	`#version 300 es
+	layout(location=0) in vec3 pos;
+	uniform mat4 proj_view;
+	uniform vec3 eye_pos;
+	uniform vec3 volume_scale;
+
+	out vec3 vray_dir;
+	flat out vec3 transformed_eye;
+
+	void main(void) {
+		// Translate the cube to center it at the origin.
+		// How to make the translation
+		vec3 volume_translation = vec3(0.5) - volume_scale * 0.5;
+		gl_Position = proj_view * vec4(pos * volume_scale + volume_translation, 1);
+
+		// Compute eye position and ray directions in the unit cube space
+		transformed_eye = (eye_pos - volume_translation) / volume_scale;
+		vray_dir = pos - transformed_eye;
+	};`;
+
+	var fs_source = 
+	`#version 300 es
+	precision highp int;
+	precision highp float;
+
+	uniform highp sampler3D volume;
+	// WebGL doesn't support 1D textures, so we use a 2D texture for the transfer function
+	uniform highp sampler2D transfer_fcn;
+	uniform ivec3 volume_dims;
+
+	in vec3 vray_dir;
+	flat in vec3 transformed_eye;
+
+	out vec4 color;
+
+	vec2 intersect_box(vec3 orig, vec3 dir) {
+		const vec3 box_min = vec3(0);
+		const vec3 box_max = vec3(1);
+		vec3 inv_dir = 1.0 / dir;
+		vec3 tmin_tmp = (box_min - orig) * inv_dir;
+		vec3 tmax_tmp = (box_max - orig) * inv_dir;
+		vec3 tmin = min(tmin_tmp, tmax_tmp);
+		vec3 tmax = max(tmin_tmp, tmax_tmp);
+		float t0 = max(tmin.x, max(tmin.y, tmin.z));
+		float t1 = min(tmax.x, min(tmax.y, tmax.z));
+		return vec2(t0, t1);
+	}
+
+	void main(void) {
+		// Step 1: Normalize the view ray
+		vec3 ray_dir = normalize(vray_dir);
+
+		// Step 2: Intersect the ray with the volume bounds to find the interval
+		// along the ray overlapped by the volume.
+		vec2 t_hit = intersect_box(transformed_eye, ray_dir);
+		if (t_hit.x > t_hit.y) {
+			discard;
+		}
+		// We don't want to sample voxels behind the eye if it's
+		// inside the volume, so keep the starting point at or in front
+		// of the eye
+		t_hit.x = max(t_hit.x, 0.0);
+
+		// Step 3: Compute the step size to march through the volume grid
+		vec3 dt_vec = 1.0 / (vec3(volume_dims) * abs(ray_dir));
+		float dt = min(dt_vec.x, min(dt_vec.y, dt_vec.z));
+
+		// Step 4: Starting from the entry point, march the ray through the volume
+		// and sample it
+		vec3 p = transformed_eye + t_hit.x * ray_dir;
+		for (float t = t_hit.x; t < t_hit.y; t += dt) {
+			// Step 4.1: Sample the volume, and color it by the transfer function.
+			// Note that here we don't use the opacity from the transfer function,
+			// and just use the sample value as the opacity
+			float val = texture(volume, p).r;
+			vec4 val_color = vec4(texture(transfer_fcn, vec2(val, 0.5)).rgb, val);
+
+			// Step 4.2: Accumulate the color and opacity using the front-to-back
+			// compositing equation
+			color.rgb += (1.0 - color.a) * val_color.a * val_color.rgb;
+			color.a += (1.0 - color.a) * val_color.a;
+
+			// Optimization: break out of the loop when the color is near opaque
+			if (color.a >= 0.95) {
+				break;
+			}
+			p += ray_dir * dt;
+		}
+	}`;
+
+	var canvas = null;
+	var gl = null;
+	var shader = null;
+	var volumeTexture = null;
+	var colormapTex = null;
+	var proj = null;
+	var camera = null;
+	var projView = null;
+	var camera = null;
+
+	var hdr;
+	var img;
+
+	var url = null;
+	var colormaps = {
+		"Cool Warm": "colormaps/cool-warm-paraview.png",
+		"Matplotlib Plasma": "colormaps/matplotlib-plasma.png",
+		"Matplotlib Virdis": "colormaps/matplotlib-virdis.png",
+		"Rainbow": "colormaps/rainbow.png",
+		"Samsel Linear Green": "colormaps/samsel-linear-green.png",
+		"Samsel Linear YGB 1211G": "colormaps/samsel-linear-ygb-1211g.png",
+	};
+	
+	// load the volume data from the url
+	function load_volume(url, data, isURL, onload){
+		var req = new XMLHttpRequest();
+		req.open("GET", url, true);
+		req.responseType = "arraybuffer";
+		req.onprogress = function(evt){
+			//
+		};
+		req.onerror = function(evt){
+			console.log("");
+		};
+		req.onload = function(evt){
+			var databuffer = req.response;
+			if(databuffer){
+				var hdr = nifti.readHeader(databuffer);
+				var img;
+				if(nifti.isCompressed(databuffer)){
+					img = nifti.readImage(hdr,nifti.decompress(databuffer));
+				}
+				else img = nifti.readImage(hdr,databuffer);
+				onload(url,hdr,img,data);
+				console.log(data);
+			}
+			else {
+				console.log("Unable to buffer from the url!");
+			}
+		};
+		req.send();
+	}
+
+	var select_volume = function(url, data, isURL = true){
+		load_volume(url, data, isURL, function(file,xhdr,ximg,data){
+
+			hdr = xhdr;
+			img = ximg;
+			var imgRaw;
+            if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT8) {
+                imgRaw = new Uint8Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT16) {
+                imgRaw = new Int16Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT32) {
+                imgRaw = new Int32Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT32) {
+                imgRaw = new Float32Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT64) {
+                imgRaw = new Float64Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT8) {
+                imgRaw = new Int8Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT16) {
+                imgRaw = new Uint16Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT32) {
+                imgRaw = new Uint32Array(img);
+            } else {
+				console.log('Unsupported data type %d', hdr.datatypeCode);
+				var e = new Error('Unsupported data type', hdr.datatypeCode);
+				throw e;
+			}
+			var vox = imgRaw.length;
+			var mn = Infinity;
+			var mx = -Infinity;
+			for (var i = 0; i < vox; i++){
+				if(!isFinite(imgRaw[i])) contine;
+				if (imgRaw[i] < mn) mn = imgRaw[i];
+				if (imgRaw[i] > mx) mx = imgRaw[i];
+			}
+			if((isFinite(hdr.scl_slope)) && (isFinite(hdr.scl_inter)) && (hdr.scl_slope != 0.0) ) {
+				mn = mn * hdr.scl_slope + hdr.scl_inter;
+				mx = mx * hdr.scl_slope + hdr.scl_inter;
+			}
+			else {
+				hdr.scl_slope = 1.0;
+				hdr.scl_inter = 0.0;
+			}
+
+			hdr.global_min = mn;
+			hdr.global_max = mx;
+			if ((!isFinite(hdr.cal_min)) || (!isFinite(hdr.cal_max)) || (hdr.cal_min >= hdr.cal_max)) {
+				hdr.cal_min = mn;
+				hdr.cal_max = mx;
+			}
+			data.hdr = hdr;
+			data.img = img;
+			console.log(data);
+			// update_volume();
+		});
+	};
+
+	var select_slice = function(flag, url, data, isURL = true, position = 0){
+		load_volume(url, data, isURL, function(file,xhdr,ximg,data){
+
+			hdr = xhdr;
+			img = ximg;
+			var imgRaw;
+            if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT8) {
+                imgRaw = new Uint8Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT16) {
+                imgRaw = new Int16Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT32) {
+                imgRaw = new Int32Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT32) {
+                imgRaw = new Float32Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_FLOAT64) {
+                imgRaw = new Float64Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_INT8) {
+                imgRaw = new Int8Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT16) {
+                imgRaw = new Uint16Array(img);
+            } else if (hdr.datatypeCode === nifti.NIFTI1.TYPE_UINT32) {
+                imgRaw = new Uint32Array(img);
+            } else {
+				console.log('Unsupported data type %d', hdr.datatypeCode);
+				var e = new Error('Unsupported data type', hdr.datatypeCode);
+				throw e;
+			}
+			var vox = imgRaw.length;
+			var mn = Infinity;
+			var mx = -Infinity;
+			for (var i = 0; i < vox; i++){
+				if(!isFinite(imgRaw[i])) contine;
+				if (imgRaw[i] < mn) mn = imgRaw[i];
+				if (imgRaw[i] > mx) mx = imgRaw[i];
+			}
+			if((isFinite(hdr.scl_slope)) && (isFinite(hdr.scl_inter)) && (hdr.scl_slope != 0.0) ) {
+				mn = mn * hdr.scl_slope + hdr.scl_inter;
+				mx = mx * hdr.scl_slope + hdr.scl_inter;
+			}
+			else {
+				hdr.scl_slope = 1.0;
+				hdr.scl_inter = 0.0;
+			}
+
+			hdr.global_min = mn;
+			hdr.global_max = mx;
+			if ((!isFinite(hdr.cal_min)) || (!isFinite(hdr.cal_max)) || (hdr.cal_min >= hdr.cal_max)) {
+				hdr.cal_min = mn;
+				hdr.cal_max = mx;
+			}
+			data.hdr = hdr;
+			data.img = img;
+			console.log(data);
+
+			var offset_x = 0;
+			var offset_y = 0;
+			var offset_z = 0;
+			// x-y plane slice selection
+			var slice_size = data.hdr.dims[1] * data.hdr.dims[2];
+			var slice = 0;
+			for(var i=0;i<slice_size;i++) ;
+			console.log(slice_size);
+			// update_volume();
+		});
+		// if(flag == 1){
+		// 	// x-y plane slice selection
+		// 	var slice_size = data.hdr.dims[1] * data.hdr.dims[2];
+		// 	console.log(slice_size);
+
+		// }
+		// else if(flag == 2){
+		// 	// x-z plane slice selection
+		// 	var slice_size = hdr.dims[1] * hdr.dims[3];
+		// }
+		// else if(flag == 3){
+		// 	// y-z plane selection
+		// }
+	};
+
+	function makeLut(Rs, Gs, Bs, As, Is) {
+	//create color lookup table provided arrays of reds, greens, blues, alphas and intensity indices
+	//intensity indices should be in increasing order with the first value 0 and the last 255.
+	// makeLut([0, 255], [0, 0], [0,0], [0,128],[0,255]); //red gradient
+		var lut = new Uint8Array(256 * 4);
+		for (i = 0; i < (Is.length-1); i++) {
+			//return a + f * (b - a);
+			var idxLo = Is[i];
+			var idxHi = Is[i+1];
+			var idxRng = idxHi - idxLo;
+			var k = idxLo * 4;
+			for (j = idxLo; j <= idxHi; j++) {
+				var f = (j-idxLo)/idxRng;
+				lut[k] = Rs[i] + f * (Rs[i+1]- Rs[i]); //Red
+				k++;
+				lut[k] = Gs[i] + f * (Gs[i+1]- Gs[i]); //Green
+				k++;
+				lut[k] = Bs[i] + f * (Bs[i+1]- Bs[i]); //Blue
+				k++;
+				lut[k] = (As[i] + f * (As[i+1]- As[i])) * colorOpacity; //Alpha
+				k++;
+			}
+		}
+	    return lut;
+	} // makeLut()
+
+	var selectColormap = function(lutName) {
+	    var lut = makeLut([0, 255], [0, 255], [0,255], [0,128],[0,255]); //gray
+	    if (lutName === "Plasma")
+			lut = makeLut([13, 156, 237, 240],[8, 23, 121, 249],[135, 158, 83, 33],[0, 56, 80, 88], [0, 64, 192, 255]); //plasma
+		if (lutName === "Viridis")
+			lut = makeLut([68,49,53,253],[1,104,183,231],[84,142,121,37],[0,56,80,88],[0,65,192,255]);//viridis
+		if (lutName === "Inferno")
+			lut = makeLut([0,120,237,240],[0,28,105,249],[4,109,37,33],[0,56,80,88],[0,64,192,255]);//inferno
+		colorName = lutName;
+		if (colormap !== null)
+			gl.deleteTexture(colormap); //release colormap');
+		colormap = gl.createTexture();
+		gl.activeTexture(gl.TEXTURE1);
+		gl.bindTexture(gl.TEXTURE_2D, colormap);
+		gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, 256, 1);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 256, 1,gl.RGBA, gl.UNSIGNED_BYTE, lut);
+	} // selectColormap()
+
+	window.onload = function(){
+		const data = {hdr:null,img:null};
+		url = "data/brainnetome.nii";
+		// url = "data/BN_Atlas_246_1mm.nii.gz";
+		select_slice(1,url,data);
+		// select_slice(1,0);
+	}
+</script>
+</html>
