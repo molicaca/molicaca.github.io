@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!–[if lt IE9]> 
+		<script type="text/javascript" src="js/html5.js"></script>
+		<![endif]–>
+		<!-- InstanceBeginEditable name="doctitle" -->
+		<title>Brainnetome Atlas | Atlas</title>
+		<link rel = "Shortcut Icon" href="images/ba/favicon.ico">
+		<!-- InstanceEndEditable -->
+		<!-- InstanceBeginEditable name="head" -->
+		<meta http-equiv="Description" content="Brainnetome Atlas" />
+		<meta http-equiv="Keywords" content="Brainnetome Atlas, Brainnetome, atlas, brain mapping, brain connectivity, brain circuitry, neuroimaging, functional MRI, PET scan" />
+		<!-- InstanceEndEditable -->
+		<link href="css/hcpv.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript"  src="js/bnatlasviewer/jquery.min.js"></script>
+		<script type="text/javascript"  src="js/webgl-util.js"></script>
+		<script type="text/javascript" src="js/UTIF.js"></script>
+<!-- 		<script src="https://webgl2fundamentals.org/webgl/resources/webgl-lessons-ui.js"></script> -->
+		<style>
+		#content li,#content-wide li {
+			font: 15px/18px Arial, Helvetica, sans-serif;
+			line-height:100%;
+			margin-bottom: 10px;
+		}
+		</style>
+	</head>
+
+<body>
+<!-- site container -->
+<div id="site_container">
+
+	<!-- Header -->
+	<div id="header">
+		<div id="header_nav">
+			<a href="http://www.ia.cas.cn/" target="_blank"><span>CASIA</span></a><span> | </span>
+			<a href="http://www.brainnetome.org/" target="_blank"><span>Brainnetome Center</span></a><span> | </span>
+			<a href="contacts.html" target="_blank"><span>Contact Us</span></a>
+		</div>
+		<div id="header_logo"></div>
+	</div> <!-- end Header -->
+
+	<!-- top level navigation -->
+	<div id="topnav">
+		<ul id="navigation" class="navigation">
+			<li id="menu-item-4061" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4061"><a href="index.html"><span>Home</span></a></li>
+			<li id="menu-item-4097" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4097"><a href="bnatlas.html"><span>Human Atlas</span></a></li>
+			<li id="menu-item-4098" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item menu-item-4098"><a href="mcqatlas.html"><span>Macaque Atlas</span></a>
+			</li>
+			<li id="menu-item-4058" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4058"><a href="download.html"><span>Download</span></a></li>
+			<li id="menu-item-4124" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4124"><a href="publications.html"><span>Publications</span></a></li>
+			<li id="menu-item-4130" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4130"><a href="faqs.html"><span>FAQs</span></a></li>
+			<li id="menu-item-4131" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4131"><a href="contacts.html"><span>Contacts</span></a></li>
+			<li id="menu-item-4909" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4909"><a href="brainnetome.html"><span>Brainnetome</span></a></li>
+		</ul>
+		<div class="cl"></div>
+	</div>
+	<div id="search"></div> <!-- Search box -->
+	<!-- End Nav -->
+
+
+	<!-- "Middle" area contains all content between the top navigation and the footer -->
+<div id="middle">
+<div id = "atlas-description">
+		<div id="content" style="width: 1024px;"class="editable">
+			<h2 id="demo"><strong>Nissil Data Demo(BF v.s. Nissil v.s. MRI)</strong></h2>
+			<div>
+				<h3 id="Title1">R04A_P06_N01</h3><select id="SelectList01" onchange="SelectSlice(1)"><option>--select another slice--</option></select>
+				<canvas id="canvas01" width="1000" height="300"></canvas>
+			</div>
+			<div></div>
+			<h2>	</h2>
+			<div>
+				<h3 id="Title2">R04A_P08_N01</h3><select id="SelectList02" onchange="SelectSlice(2)"><option>--select another slice--</option></select>
+				<canvas id="canvas02" width="1000" height="300"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- footer -->
+	<div id="footer">
+		<div id="footer_nav">
+			<div id="nav_brainnetomeAtlasOverview"  class="children" style="width:210px;">
+				<h2>Brainnetome Atlas</h2>
+				<p>Brainnetome atlas will be an in vivo map, with more fine-grained functional brain subregions and detailed anatomical and functional connection patterns for each area, which could help researchers to
+	more accurately describe the locations of the activation or connectivity in the brain…<a href="brainnetome.html" style="color: #DDDDDD">more</a></p>
+			</div>
+
+			<div id="nav_getInTouch"  class="children">
+				<h2>Get in Touch</h2>
+				<p>Brainnetome Center
+				<p>National Laboratory of Pattern Recognition, Institute of Automation, The Chinese Academy of Sciences, 100190, PR China</p>
+				<p>Telephone: +(86) 010-8254 4778
+				<br>Fax:+ (86) 010-6255 1993
+				<br>Email:<a href ="mailto:brainnetome.atlas@nlpr.ia.ac.cn?subject=[Brainnetome Contact]">brainnetome.atlas@nlpr.ia.ac.cn </a></p>
+			</div>
+
+			<div id="nav_relatedDownload"  class="children">
+				<h2>Related Download</h2>
+				<ul>
+	      	<li><a href="http://www.nitrc.org/projects/bn_atlas" target="_blank">Brainnetome Atlas @NITRC</a></li>
+	        <li><a href="http://www.fil.ion.ucl.ac.uk/spm/ext/#Brainnetome" target="_blank">Brainnetome Atlas @SPM</a></li>
+	        <li><a href="http://atlas.brainnetome.org/BrainBrowser/SurfaceViewer.html" target="_blank">Brainnetome Atlas @BrainBrowser</a></li>
+			<li><a href="https://scalablebrainatlas.incf.org/human/BNA" target="_blank">Brainnetome Atlas @Scalable Brain Atlas</a></li>
+			  </ul>
+			</div>
+			<div id="nav_affiliations"  class="children">
+				<h2>Affiliations</h2>
+				<ul>
+	      	<li><a href="http://www.brainnetome.org/" target="_blank">Brainnetome Center</a></li>
+			    <li><a href="http://www.nlpr.ia.ac.cn/english/" target="_blank">National Laboratory of Pattern Recognition (NLPR)</a></li>
+			    <li><a href="http://www.ia.cas.cn/" target="_blank">Institute of Automation,The Chinese Academy of Sciences (CASIA)</a></li>
+			  </ul>
+			</div>
+			
+		</div>
+		
+	</div><!-- End footer -->
+	
+</div><!-- End site container -->
+
+
+<div id="footer_right">
+	 <p>Copyright © 2014 Brainnetome Center. Institute of Automation.Chinese Academy of Sciences. All rights reserved. (Browser: IE9 and above)</p>
+</div>
+
+</body>
+<script type="text/javascript">
+	var vertexShaderSource = `#version 300 es
+
+	// an attribute is an input (in) to a vertex shader.
+	// It will receive data from a buffer
+	layout(location=0) in vec2 a_position;
+	uniform vec2 volume_scale;
+	uniform float zoom_scale;
+	uniform vec2 translation;
+
+	// Used to pass the texture coordinates to the fragment shader
+	out vec2 v_texCoord;
+
+	// all shaders have a main function
+	void main() {
+		vec2 volume_translation = vec2(0.5) - volume_scale * 0.5;
+	  gl_Position = vec4(a_position, 0, 1);
+
+	  // pass the texCoord to the fragment shader
+	  // The GPU will interpolate this value between points.
+	  v_texCoord = (((vec2(0.5, 0.5) + 0.5 * a_position + translation)/zoom_scale + vec2(0.5,0.5) - 0.5 / zoom_scale) / 1.0 - volume_translation)/volume_scale;
+	}
+	`;
+
+	var fragmentShaderSource = `#version 300 es
+
+	// fragment shaders don't have a default precision so we need
+	// to pick one. highp is a good default. It means "high precision"
+	precision highp int;
+	precision highp float;
+
+	uniform highp sampler2D slice;
+	uniform float light;
+	// the texCoords passed in from the vertex shader.
+	in vec2 v_texCoord;
+
+	// we need to declare an output for the fragment shader
+	out vec4 outColor;
+
+	void main() {
+	  outColor = vec4(texture(slice, vec2(v_texCoord.x, -v_texCoord.y)).rgb*light,1.0);
+	}
+	`;
+
+	// var canvas01 = null;
+	// var gl01 = null;
+	// var shader01 = null;
+
+	// var canvas02 = null;
+	// var gl02 = null;
+
+	// var shader = null;
+	// var vao = null;
+	var volScale_BF = [1.0,1.0];
+	var volScale_MRI = [1.0,1.0];
+	var volScale_Nissil = [1.0,1.0];
+	var volScale = [volScale_BF,volScale_Nissil,volScale_MRI];
+	var translation = [0,0];
+	var zoom = 1.0;
+	var colormap = null;
+
+	var canvas01 = null;
+	var gl01 = null;
+	var canvas02 = null;
+	var gl02 = null;
+	var url1 = "R04A_P08_N01_01";
+	var url2 = "R04C_P22_N01_01";
+
+	function Set_Shader(shader, gl) {
+		// setup GLSL program
+		// if(!shader){
+		// 	console.log(shader);
+	 //  	shader = new Shader(gl,vertexShaderSource, fragmentShaderSource);
+		// }
+		// else console.log(shader);
+	  shader.use(gl);
+
+	  // Create a vertex array object (attribute state)
+	  var vao = gl.createVertexArray();
+
+	  // and make it the one we're currently working with
+	  gl.bindVertexArray(vao);
+
+	  // Create a buffer and put a single pixel space rectangle in
+	  // it (2 triangles)
+	  var positionBuffer = gl.createBuffer();
+
+	  // Turn on the attribute
+	  // gl.enableVertexAttribArray(positionAttributeLocation);
+	  gl.enableVertexAttribArray(0);
+
+	  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+	  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+	  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+	     -1.0, -1.0,
+	      1.0, -1.0,
+	     -1.0,  1.0,
+	     -1.0,  1.0,
+	      1.0, -1.0,
+	      1.0,  1.0,
+	  ]), gl.STATIC_DRAW);
+
+	   gl.vertexAttribPointer( 0, 2, gl.FLOAT, false, 0, 0 );
+
+	   return vao;
+
+	}
+
+	function render(vao, shader, gl){
+		drawScene(vao, shader,gl,0);
+		drawScene(vao, shader,gl,1);
+		drawScene(vao, shader,gl,2);
+	}
+	function drawScene(vao, shader,gl,flag){
+  shader.use(gl);
+
+  // Tell WebGL how to convert from clip space to pixels
+  gl.viewport(300*flag, 0, 300, 300);
+  gl.scissor(300*flag, 0, 300, 300);
+
+  // Clear the canvas
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  gl.bindVertexArray(vao);
+
+  gl.uniform1i(shader.uniforms["slice"], flag);
+  gl.uniform2fv(shader.uniforms["translation"], translation);
+  gl.uniform1f(shader.uniforms["zoom_scale"], zoom);
+  gl.uniform1f(shader.uniforms["light"], Math.floor(flag/2)*4.0+1.0);
+  gl.uniform2fv(shader.uniforms["volume_scale"], volScale[flag]);
+
+
+  // Draw the rectangle.
+  var primitiveType = gl.TRIANGLES;
+  var offset = 0;
+  var count = 6;
+  gl.drawArrays(primitiveType, offset, count);
+  }
+
+  // function updatePosition(index,gl,max) {
+  //   return function(event, ui) {
+  //     translation[index] = ui.value/max;
+  //     drawScene(gl);
+  //   };
+  // }
+  // function updateOpacity(gl) {
+  //   return function(event, ui) {
+  //     zoom = ui.value;
+  //     drawScene(gl);
+  //   };
+  // }
+
+
+  function UpdatePosition(translate, slice_dims, vao, shader, gl ) {
+  	translation[0] += translate[0] / slice_dims[0];
+  	translation[1] -= translate[1] / slice_dims[1];
+  	render(vao, shader, gl);
+  }
+
+  function UpdateZoom(amt, vao, shader, gl ) {
+  	if (Math.abs(zoom+amt)>50) return;
+  	else if(amt < 0)
+  		if (zoom + amt < 1) zoom = Math.max(zoom * Math.pow(1.1, amt),0.1);
+  		else zoom = zoom + amt;
+  	else if(zoom < 1) zoom = Math.min(zoom+amt, zoom * Math.pow(1.1, amt));
+  	else
+  	zoom = zoom + amt;
+    render(vao,shader,gl);
+  }
+
+  function load_BF(gl,url){
+  var BF_Image = new Image();
+  BF_Image.onload = function() {
+  	var longestAxis = Math.max(BF_Image.width, BF_Image.height);
+ 		volScale[0] = [BF_Image.width / longestAxis, BF_Image.height/ longestAxis];
+    var BFmap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, BFmap);
+    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.SRGB8_ALPHA8, BF_Image.width, BF_Image.height);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, BF_Image.width, BF_Image.height,
+      gl.RGBA, gl.UNSIGNED_BYTE, BF_Image);
+    console.log("BF loaded");
+  };
+  BF_Image.src = url;  	
+  }
+
+  function load_MRI(gl,url) {
+  var xhr = new XMLHttpRequest();
+	xhr.responseType = 'arraybuffer';
+
+	xhr.open('get', url);
+	xhr.onload = function (e) {
+		var ifds = UTIF.decode(e.target.response);
+	  UTIF.decodeImage(e.target.response, ifds[0])
+	  var rgba  = UTIF.toRGBA8(ifds[0]);  // Uint8Array with RGBA pixels
+	  var longestAxis = Math.max(ifds[0].width, ifds[0].height);
+ 		volScale[2] = [ifds[0].width / longestAxis, ifds[0].height / longestAxis];
+ 		console.log(ifds[0].width, ifds[0].height);
+    var MRImap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, MRImap);
+    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.SRGB8_ALPHA8, ifds[0].width, ifds[0].height);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, ifds[0].width, ifds[0].height,
+      gl.RGBA, gl.UNSIGNED_BYTE, rgba);
+    console.log("MRI loaded");
+	};
+		xhr.send();
+  }
+
+  function load_Nissil(vao, shader, gl, url, canvas){
+  var xhr = new XMLHttpRequest();
+	xhr.responseType = 'arraybuffer';
+
+	xhr.open('get', url);
+	xhr.onload = function (e) {
+		var ifds = UTIF.decode(e.target.response);
+	  UTIF.decodeImage(e.target.response, ifds[0])
+	  var rgba  = UTIF.toRGBA8(ifds[0]);  // Uint8Array with RGBA pixels
+	  var longestAxis = Math.max(ifds[0].width, ifds[0].height);
+ 		volScale[1] = [ifds[0].width / longestAxis, ifds[0].height / longestAxis];
+ 		console.log(ifds[0].width, ifds[0].height);
+ 		console.log(rgba);
+    var colormap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, colormap);
+    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.SRGB8_ALPHA8, ifds[0].width, ifds[0].height);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, ifds[0].width, ifds[0].height,
+      gl.RGBA, gl.UNSIGNED_BYTE, rgba);
+    console.log("Nissil loaded");
+    render(vao, shader, gl);
+   //  webglLessonsUI.setupSlider("#x", {value: 0, slide: updatePosition(0,gl01,ifds[0].width), min: -ifds[0].width/2, max: ifds[0].width/2 });
+	  // webglLessonsUI.setupSlider("#y", {value: 0, slide: updatePosition(1,gl01,ifds[0].height), min: -ifds[0].height/2, max: ifds[0].height/2 });
+	  // webglLessonsUI.setupSlider("#zoom", {value: zoom, slide: updateOpacity(gl01), min: 1, max: 100 });
+
+	  // Register mouse and touch listeners
+		var controller = new Controller();
+		controller.mousemove = function(prev, cur, evt) {
+			if (evt.buttons == 1) {
+				// camera.rotate(prev, cur);
+				UpdatePosition([prev[0] - cur[0],prev[1] - cur[1]], [300,300], vao, shader, gl);
+				// console.log(prev, cur);
+
+			} else if (evt.buttons == 2) {
+				// camera.pan([cur[0] - prev[0], prev[1] - cur[1]]);
+				console.log("evet2 occurs");
+			}
+		};
+		controller.wheel = function(amt) { 
+			//camera.zoom(amt); 
+			// zoom = amt;
+			UpdateZoom(10/amt, vao, shader, gl);
+			console.log(zoom);
+		};
+		controller.pinch = controller.wheel;
+		controller.twoFingerDrag = function(drag) { 
+			//camera.pan(drag); 
+			console.log(drag);
+		};
+		controller.registerForCanvas(canvas);
+		console.log(canvas);
+	};
+
+		xhr.send();
+  }
+
+var fillSelector = function(id,elems) {
+	var selector = document.getElementById(id);
+	for (v in elems) {
+		var opt = document.createElement("option");
+		opt.value = elems[v];
+		opt.innerHTML = elems[v];
+		selector.appendChild(opt);
+	}
+}
+
+  function SelectSlice(flag) {
+  	if(flag ==1){
+  		var selection = document.getElementById("SelectList01").value;
+  		document.getElementById("Title1").innerHTML = selection;
+  		url1 = selection;
+  		load_slice(url1, canvas01, gl01);
+  	}
+  	if(flag ==2){
+  		var selection = document.getElementById("SelectList02").value;
+  		document.getElementById("Title2").innerHTML = selection;
+  		url2 = selection;
+  		load_slice(url2, canvas02, gl02);
+  	}  	
+  }
+
+  function load_slice(url,canvas,gl){
+  	var BF_url = "mcqatlas/Nissil/BF/"+ url + ".png";
+  	var MRI_url = "mcqatlas/Nissil/MRI/"+ url + ".tif";
+  	var Nissil_url = "mcqatlas/Nissil/x10NS/"+ url + ".tif";
+  	shader = new Shader(gl,vertexShaderSource, fragmentShaderSource);
+	  vao = Set_Shader(shader,gl);
+	  console.log(shader);
+	  // Set_Shader(shader,gl);
+	  // load_BF(gl,"mcqatlas/Nissil/BF/R04A_P06_N01.png");
+	  // load_MRI(gl,"mcqatlas/Nissil/MRI/R04A_P06_N01.tif");
+	  // load_Nissil(vao, shader, gl,"mcqatlas/Nissil/x10NS/R04A_P06_N01.tif",canvas01);
+	  load_BF(gl,BF_url);
+	  load_MRI(gl,MRI_url);
+	  load_Nissil(vao, shader, gl, Nissil_url,canvas);
+  }
+	window.onload = function(){
+	$.ajax("mcqatlas/Nissil/name.json").done(function(data){
+			fillSelector("SelectList01",data.name);
+			fillSelector("SelectList02",data.name);
+		});
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  canvas01 = document.querySelector("#canvas01");
+  gl01 = canvas01.getContext("webgl2");
+  if (!gl01) {
+    return;
+  }
+  var ext = gl01.getExtension('EXT_color_buffer_float');
+  gl01.getExtension('OES_texture_float');
+  gl01.getExtension('OES_texture_float_linear');
+  gl01.enable(gl01.SCISSOR_TEST);
+  load_slice(url1, canvas01, gl01);
+  // shader01 = new Shader(gl01,vertexShaderSource, fragmentShaderSource);
+  // vao01 = Set_Shader(shader01,gl01);
+  // console.log(shader01);
+  // // Set_Shader(shader,gl01);
+  // load_BF(gl01,"mcqatlas/Nissil/BF/R04A_P06_N01.png");
+  // load_MRI(gl01,"mcqatlas/Nissil/MRI/R04A_P06_N01.tif");
+  // load_Nissil(vao01, shader01, gl01,"mcqatlas/Nissil/x10NS/R04A_P06_N01.tif",canvas01);
+
+  canvas02 = document.querySelector("#canvas02");
+  gl02 = canvas02.getContext("webgl2");
+  if (!gl02) {
+    return;
+  }
+  var ext = gl02.getExtension('EXT_color_buffer_float');
+  gl02.getExtension('OES_texture_float');
+  gl02.getExtension('OES_texture_float_linear');
+  gl02.enable(gl02.SCISSOR_TEST);
+  // shader02 = new Shader(gl02,vertexShaderSource, fragmentShaderSource);  
+  // vao02 = Set_Shader(shader02,gl02);
+  // // Set_Shader(shader,gl02);
+  // load_BF(gl02,"mcqatlas/Nissil/BF/R04A_P08_N01.png");
+  // load_MRI(gl02,"mcqatlas/Nissil/MRI/R04A_P08_N01.tif");
+  // load_Nissil(vao02,shader02, gl02,"mcqatlas/Nissil/x10NS/R04A_P08_N01.tif",canvas02);
+  load_slice(url2, canvas02, gl02);
+}
+</script>
+</html>
+
+
