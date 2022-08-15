@@ -1,0 +1,2 @@
+*.tif filter=lfs diff=lfs merge=lfs -text
+atlas/mcqatlas/Nissil/x10NS/R04A_P06_N01.tif filter=lfs diff=lfs merge=lfs -text
