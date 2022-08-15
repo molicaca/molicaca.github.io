@@ -129,6 +129,7 @@ var pointDist = function(a, b) {
  */
 var Controller = function() {
 	this.mousemove = null;
+	this.mousedown = null;
 	this.wheel = null;
 	this.twoFingerDrag = null;
 	this.pinch = null;
@@ -148,6 +149,12 @@ Controller.prototype.registerForCanvas = function(canvas) {
 			self.mousemove(prevMouse, curMouse, evt);
 		}
 		prevMouse = curMouse;
+		this.dispatchEvent(new CustomEvent('cameraRedraw', { bubbles: true  }))
+	});
+
+	canvas.addEventListener("mousedown", function(evt) {
+		evt.preventDefault();
+		self.mousedown(evt);
 		this.dispatchEvent(new CustomEvent('cameraRedraw', { bubbles: true  }))
 	});
 
